@@ -25,7 +25,7 @@ package object parsers {
       }
     }
     def replace[NewResult](result: NewResult) = map(_ => result)
-    def filter(f: Result => Boolean) = for {
+    def withFilter(f: Result => Boolean) = for {
       x <- this
       _ <- if (f(x)) done(()) else fail("filter failed")
     } yield x

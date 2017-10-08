@@ -100,11 +100,11 @@ object JSON {
         lit("}").replace(DictStartToken) ++
         lit(":").replace(DictAssocToken) ++
         lit(",").replace(SepToken)
-      lazy val whitespace = char.filter(_.isWhitespace)
+      lazy val whitespace = char.withFilter(_.isWhitespace)
       lazy val token = whitespace.star *> _token *< whitespace.star
     }
     
-    private def tok(token: tokens.Token) = tokens.token.filter(_ == token)
+    private def tok(token: tokens.Token) = tokens.token.withFilter(_ == token)
     
     lazy val json: Parser[JSON] = bool ++ text ++ number ++ array ++ dict ++ nil
     lazy val bool = for {
