@@ -29,41 +29,13 @@ object ConnColor {
   val lookup = connColors.map(col => col.name -> col).toMap
 }
 
-trait CityData {
-  def pos: V2
-  def name: String
-}
-trait ConnectionData[scenario <: Scenario] {
-  def from: scenario#City
-  def to: scenario#City
-  def color: Option[ConnColor]
-  def length: Int
-}
-trait Scenario {
-  
-  type City <: CityData
-  type Connection <: ConnectionData[this.type]
-  
-  def width: Double
-  def height: Double
-  
-  def edges: Set[Connection]
-  def cities: Set[City] = edges.flatMap(edge => Set(edge.from, edge.to))
-  def name: String
-  
-}
+class City(var pos: V2, var name: String)
+class Connection(var from: City, var to: City, var color: Option[ConnColor], var length: Int)
 
 // do not actually mutate the scenario once a game has started, or things will likely break
-class MutableScenario(var name: String, var width: Double, var height: Double) extends Scenario {
-  
-  class City(var pos: V2, var name: String) extends CityData
-  class Connection(var from: City, var to: City, var color: Option[ConnColor], var length: Int) extends ConnectionData[this.type]
+class Scenario(var name: String, var width: Double, var height: Double) {
   
   var edges = Set[Connection]()
-  private var _cities = Set[City]()
-  override def cities = _cities
-  def cities_=(newCities: Set[City]) = {
-    _cities = newCities
-  }
+  var cities = Set[City]()
   
 }

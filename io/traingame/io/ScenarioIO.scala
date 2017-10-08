@@ -1,18 +1,15 @@
 package traingame.io
 
-import traingame.MutableScenario
-import traingame.ConnColor
-import traingame.Scenario
-import traingame.V2
+import traingame._
 
 object ScenarioIO {
   
-  def load(data: JSON): MutableScenario = {
+  def load(data: JSON): Scenario = {
     val JSON.Array(Vector(JSON.Number(width), JSON.Number(height))) = data.dict("size")
-    val result = new MutableScenario(data.dict("name").text.value, width, height)
+    val result = new Scenario(data.dict("name").text.value, width, height)
     for (cityData <- data.dict("cities").array.values.map(_.dict)) {
       val JSON.Array(Vector(JSON.Number(x), JSON.Number(y))) = cityData.dict("pos")
-      val city = new result.City(V2(x, y), cityData("name").text.value)
+      val city = new City(V2(x, y), cityData("name").text.value)
       result.cities += city
     }
     def lookupCity(name: String) = result.cities.find { x => x.name == name }.get
@@ -22,7 +19,7 @@ object ScenarioIO {
         case JSON.Text(text) => Some(ConnColor.lookup(text))
         case _ => throw new Exception
       }
-      val conn = new result.Connection(
+      val conn = new Connection(
           lookupCity(connData("from").text.value), lookupCity(connData("to").text.value),
           color, connData("length").number.intValue)
       result.edges += conn

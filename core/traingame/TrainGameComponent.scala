@@ -19,8 +19,8 @@ class TrainGameComponent[Scen <: Scenario](scen: Scen) extends JComponent {
   
   sealed trait Selection
   case object NoSelection extends Selection
-  case class CitySelection(selected: Scen#City) extends Selection
-  case class ConnSelection(selected: Scen#Connection) extends Selection
+  case class CitySelection(selected: City) extends Selection
+  case class ConnSelection(selected: Connection) extends Selection
   
   var selection: Selection = NoSelection
   var onSelectionChanged: (Selection, Selection) => Unit = (oldSel, newSel) => {}

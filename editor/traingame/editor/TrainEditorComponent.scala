@@ -1,11 +1,8 @@
 package traingame.editor
 
-import traingame.Scenario
-import traingame.TrainGameComponent
+import traingame._
 import java.awt.event.MouseListener
 import java.awt.event.MouseEvent
-import traingame.V2
-import traingame.MutableScenario
 import java.awt.event.MouseMotionListener
 import java.awt.event.KeyEvent
 import java.awt.event.InputEvent
@@ -16,15 +13,15 @@ import java.awt.BasicStroke
 import java.awt.geom.Line2D
 import java.awt.Color
 
-class TrainEditorComponent[Scen <: MutableScenario](val scen: Scen) extends TrainGameComponent[Scen](scen) {
-  var dragging: Option[(Scen#City, V2)] = None
-  var joining: Option[Scen#City] = None
+class TrainEditorComponent(val scen: Scenario) extends TrainGameComponent(scen) {
+  var dragging: Option[(City, V2)] = None
+  var joining: Option[City] = None
   var mpos = V2(0, 0)
   addMouseListener(new MouseListener() {
     def mouseClicked(ev: MouseEvent) = {
       val pt = V2.fromPoint(ev.getPoint).transform(screenspaceToBoardspace)
       if (selection == NoSelection && (ev.getModifiersEx & InputEvent.CTRL_DOWN_MASK) != 0) {
-        scen.cities += new scen.City(pt, JOptionPane.showInputDialog("City Name"))
+        scen.cities += new City(pt, JOptionPane.showInputDialog("City Name"))
       }
       repaint()
     }
@@ -49,7 +46,7 @@ class TrainEditorComponent[Scen <: MutableScenario](val scen: Scen) extends Trai
       dragging = None
       (joining, identify(V2.fromPoint(ev.getPoint).transform(screenspaceToBoardspace))) match {
         case (Some(city1), CitySelection(city2)) if city1 != city2 =>
-          scen.edges += new scen.Connection(city1.asInstanceOf[scen.City], city2.asInstanceOf[scen.City], None, 5)
+          scen.edges += new Connection(city1, city2, None, 5)
         case _ =>
       }
       joining = None
