@@ -20,7 +20,7 @@ object JSON {
   }
   case class Number(value: Double) extends JSON {
     def intValue = if (value.toInt.toDouble == value) value.toInt else throw new Exception
-    override def toString = value.toString
+    override def toString = if (value.toInt.toDouble == value) value.toInt.toString else value.toString
   }
   case class Array(values: Vector[JSON]) extends JSON {
     override def show(indentation: Int) =
@@ -40,7 +40,7 @@ object JSON {
   
   object parser {
     import parsers._
-    private object tokens {
+    object tokens {
       sealed trait Token
       case class BooleanToken(value: Boolean) extends Token
       case class StringToken(value: String) extends Token
@@ -62,7 +62,7 @@ object JSON {
       lazy val text = {
         val validStringChar = for {
           ch <- char
-          if (ch != '\\')
+          if (ch != '\\') && (ch != '\"')
         } yield ch.toString
         val escape = lit("\\") *> char.flatMap {
           case 'n' => done("\n")
@@ -97,7 +97,7 @@ object JSON {
         lit("[").replace(ArrayStartToken) ++
         lit("]").replace(ArrayEndToken) ++
         lit("{").replace(DictStartToken) ++
-        lit("}").replace(DictStartToken) ++
+        lit("}").replace(DictEndToken) ++
         lit(":").replace(DictAssocToken) ++
         lit(",").replace(SepToken)
       lazy val whitespace = char.withFilter(_.isWhitespace)

@@ -14,6 +14,7 @@ import java.awt.geom.Line2D
 import java.awt.Color
 
 class TrainEditorComponent(val scen: Scenario) extends TrainGameComponent(scen) {
+  import TrainGameComponent._
   var dragging: Option[(City, V2)] = None
   var joining: Option[City] = None
   var mpos = V2(0, 0)
@@ -21,7 +22,10 @@ class TrainEditorComponent(val scen: Scenario) extends TrainGameComponent(scen) 
     def mouseClicked(ev: MouseEvent) = {
       val pt = V2.fromPoint(ev.getPoint).transform(screenspaceToBoardspace)
       if (selection == NoSelection && (ev.getModifiersEx & InputEvent.CTRL_DOWN_MASK) != 0) {
-        scen.cities += new City(pt, JOptionPane.showInputDialog("City Name"))
+        val name = JOptionPane.showInputDialog("City Name")
+        if (name != null) {
+          scen.cities += new City(pt, name)
+        }
       }
       repaint()
     }

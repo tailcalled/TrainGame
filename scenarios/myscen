@@ -1,0 +1,37 @@
+{
+	"name": "My Scenario",
+	"size": [
+		40.0,
+		40.0],
+	"cities": [
+		{
+			"pos": [
+				40.0,
+				20.0],
+			"name": "Eastdale"},
+		{
+			"pos": [
+				0.0,
+				20.0],
+			"name": "Westtown"},
+		{
+			"pos": [
+				20.0,
+				40.0],
+			"name": "Southburg"},
+		{
+			"pos": [
+				20.0,
+				20.0],
+			"name": "Middleton"},
+		{
+			"pos": [
+				11.58365758754864,
+				12.17509727626459],
+			"name": "Northville"}],
+	"conns": [
+		{
+			"from": "Northville",
+			"to": "Eastdale",
+			"color": "Green",
+			"length": 6.0}]}

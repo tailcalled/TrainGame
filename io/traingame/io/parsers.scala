@@ -27,7 +27,7 @@ package object parsers {
     def replace[NewResult](result: NewResult) = map(_ => result)
     def withFilter(f: Result => Boolean) = for {
       x <- this
-      _ <- if (f(x)) done(()) else fail("filter failed")
+      _ <- if (f(x)) done(()) else fail("filter failed: " + x)
     } yield x
     def **[OtherResult](that: => Parser[OtherResult]) = for {
       x <- this
@@ -91,11 +91,16 @@ package object parsers {
       if (ch == -1) Stream.Empty
       else ch.asInstanceOf[Char] #:: read()
     }
-    val chars = read()
-    parser(chars) match {
-      case Success(res, Stream.Empty) => res
-      case Success(res, rest) => throw new Exception("unexpected eof\n"+rest)
-      case Failure(msg) => throw new Exception(msg)
+    try {
+      val chars = read()
+      parser(chars) match {
+        case Success(res, Stream.Empty) => res
+        case Success(res, rest) => throw new Exception("unexpected eof\n"+rest)
+        case Failure(msg) => throw new Exception(msg)
+      }
+    }
+    finally {
+      input.close()
     }
   }
 
